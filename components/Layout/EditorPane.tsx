@@ -7,6 +7,7 @@ import { getFileIcon } from '../utils/Icons';
 import BioRenderer from '../Content/BioRenderer';
 import ProjectRenderer from '../Content/ProjectRenderer';
 import ContactRenderer from '../Content/ContactRenderer';
+import StartPage from '../Content/StartPage';
 
 const ContentRenderer = ({ path }: { path: string }) => {
   if (path === '/About/bio.md') return <BioRenderer />;
@@ -59,15 +60,7 @@ const EditorPane = () => {
       <div className="flex-1 overflow-auto custom-scrollbar relative">
         {activeFile ? (
            <ContentRenderer path={activeFile} />
-        ) : (
-          <div className="flex items-center justify-center h-full text-zinc-600">
-             <div className="text-center">
-               <div className="text-6xl mb-4 font-bold opacity-10">VS Code</div>
-               <p>Select a file to view.</p>
-               <p className="text-sm mt-4">Tip: Toggle Terminal with Ctrl+`</p>
-             </div>
-          </div>
-        )}
+        ) : <StartPage />}
       </div>
     </div>
   );
