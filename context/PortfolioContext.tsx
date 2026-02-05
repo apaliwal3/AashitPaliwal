@@ -18,12 +18,14 @@ interface PortfolioContextType {
   openFiles: string[];
   fileSystem: FileSystemItem[];
   explorerVisible: boolean;
+  activeSidebarView: 'explorer' | 'extensions' | null;
   terminalVisible: boolean;
   
   openFile: (path: string) => void;
   closeFile: (path: string) => void;
   toggleFolder: (path: string) => void;
   toggleExplorer: () => void;
+  setActiveSidebarView: (view: 'explorer' | 'extensions' | null) => void;
   toggleTerminal: () => void;
   setTerminalVisible: (visible: boolean) => void;
 }
@@ -37,7 +39,13 @@ const initialFileSystem: FileSystemItem[] = [
     path: '/About',
     isOpen: true,
     children: [
-      { name: 'bio.md', type: 'file', path: '/About/bio.md', language: 'markdown' }
+      {
+        name: 'bio.md',
+        type: 'file',
+        path: '/About/bio.md',
+        language: 'markdown',
+        content: 'bio'
+      }
     ]
   },
   {
@@ -46,8 +54,20 @@ const initialFileSystem: FileSystemItem[] = [
     path: '/Projects',
     isOpen: true,
     children: [
-      { name: 'portfolio.tsx', type: 'file', path: '/Projects/portfolio.tsx', language: 'typescript' },
-      { name: 'ecommerce-api.ts', type: 'file', path: '/Projects/ecommerce-api.ts', language: 'typescript' }
+      {
+        name: 'portfolio.tsx',
+        type: 'file',
+        path: '/Projects/portfolio.tsx',
+        language: 'typescript',
+        content: 'project'
+      },
+      {
+        name: 'ecommerce-api.ts',
+        type: 'file',
+        path: '/Projects/ecommerce-api.ts',
+        language: 'typescript',
+        content: 'project'
+      }
     ]
   },
   {
@@ -56,10 +76,22 @@ const initialFileSystem: FileSystemItem[] = [
     path: '/Contact',
     isOpen: true,
     children: [
-      { name: 'contact.json', type: 'file', path: '/Contact/contact.json', language: 'json' }
+      {
+        name: 'contact.json',
+        type: 'file',
+        path: '/Contact/contact.json',
+        language: 'json',
+        content: 'contact'
+      }
     ]
   },
-  { name: 'README.md', type: 'file', path: '/README.md', language: 'markdown' }
+  {
+    name: 'README.md',
+    type: 'file',
+    path: '/README.md',
+    language: 'markdown',
+    content: 'readme'
+  }
 ];
 
 export const PortfolioProvider = ({ children }: { children: ReactNode }) => {
@@ -67,12 +99,14 @@ export const PortfolioProvider = ({ children }: { children: ReactNode }) => {
   const [openFiles, setOpenFiles] = useState<string[]>([]);
   const [fileSystem, setFileSystem] = useState<FileSystemItem[]>(initialFileSystem);
   const [explorerVisible, setExplorerVisible] = useState(true);
+  const [activeSidebarView, setActiveSidebarView] = useState<'explorer' | 'extensions' | null>('explorer');
   const [terminalVisible, setTerminalVisible] = useState(true);
 
   // Responsive check
   React.useEffect(() => {
     if (window.innerWidth < 768) {
       setExplorerVisible(false);
+      setActiveSidebarView(null);
       setTerminalVisible(false);
     }
   }, []);
@@ -117,11 +151,13 @@ export const PortfolioProvider = ({ children }: { children: ReactNode }) => {
       openFiles,
       fileSystem,
       explorerVisible,
+      activeSidebarView,
       terminalVisible,
       openFile,
       closeFile,
       toggleFolder,
       toggleExplorer,
+      setActiveSidebarView,
       toggleTerminal,
       setTerminalVisible
     }}>
