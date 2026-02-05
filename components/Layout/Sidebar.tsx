@@ -4,34 +4,60 @@ import React, { useState } from 'react';
 import { ChevronRight, ChevronDown, MoreHorizontal, Filter, RefreshCcw, Puzzle } from 'lucide-react';
 import { usePortfolio, FileSystemItem } from '../../context/PortfolioContext';
 import { getFileIcon } from '../utils/Icons';
+import { SiReact, SiNextdotjs, SiTypescript, SiPostgresql, SiNodedotjs,
+  SiPython, SiGit, SiDocker, SiJavascript, SiPytorch, SiNumpy, SiScikitlearn,
+  SiR, SiTensorflow, SiCplusplus, SiOpencv, SiJupyter, SiNpm
+ } from "react-icons/si";
+import { RiJavaFill } from "react-icons/ri";
 import { motion, AnimatePresence } from 'framer-motion';
 
-const extensions = [
-  { name: 'React', category: 'Framework', desc: 'JavaScript library', version: '18.2.0', publisher: 'Meta', icon: '/react.png' },
-  { name: 'Next.js', category: 'Framework', desc: 'The React Framework', version: '14.1.0', publisher: 'Vercel', icon: '/next.png' },
-  { name: 'TypeScript', category: 'Language', desc: 'Typed JavaScript', version: '5.3.3', publisher: 'Microsoft', icon: '/ts.png' },
-  { name: 'SQL', category: 'Language', desc: 'Structured Query Language', version: '2016', publisher: 'ISO', icon: '/sql.png' },
-  { name: 'Node.js', category: 'Framework', desc: 'JS Runtime', version: '20.10.0', publisher: 'OpenJS', icon: '/node.png' },
-  { name: 'Python', category: 'Language', desc: 'Programming Language', version: '3.12.1', publisher: 'Python', icon: '/python.png' },
-  { name: 'Git', category: 'Tool', desc: 'Version Control', version: '2.43.0', publisher: 'The Git Project', icon: '/git.png' },
-  { name: 'Docker', category: 'Tool', desc: 'Containerization', version: '24.0.5', publisher: 'Docker, Inc.', icon: '/docker.png' },
-  { name: 'JavaScript', category: 'Language', desc: 'Programming Language', version: 'ES2024', publisher: 'ECMA International', icon: '/js.png' },
-  { name: 'PyTorch', category: 'Framework', desc: 'Machine Learning', version: '2.1.0', publisher: 'Meta', icon: '/pytorch.png' },
-  { name: 'NumPy', category: 'Library', desc: 'Numerical Computing', version: '1.26.4', publisher: 'NumPy Developers', icon: '/numpy.png' },
-  { name: 'scikit-learn', category: 'Library', desc: 'Machine Learning', version: '1.2.2', publisher: 'scikit-learn Developers', icon: '/scikit-learn.png' },
-  { name: 'R', category: 'Language', desc: 'Statistical Computing', version: '4.3.1', publisher: 'R Core Team', icon: '/r.png' },
+interface Extension {
+  name: string;
+  category: string;
+  desc: string;
+  version: string;
+  publisher: string;
+  icon: React.ElementType;
+  color?: string;
+}
+
+const extensions: Extension[] = [
+  { name: 'React', category: 'Frameworks & Tools', desc: 'JavaScript library', version: '18.2.0', publisher: 'Meta', icon: SiReact, color: '#61DAFB' },
+  { name: 'Next.js', category: 'Frameworks & Tools', desc: 'The React Framework', version: '14.1.0', publisher: 'Vercel', icon: SiNextdotjs, color: '#FFFFFF' },
+  { name: 'TypeScript', category: 'Languages', desc: 'Typed JavaScript', version: '5.3.3', publisher: 'Microsoft', icon: SiTypescript, color: '#3178C6' },
+  { name: 'SQL', category: 'Languages', desc: 'Structured Query Language', version: '2016', publisher: 'ISO', icon: SiPostgresql, color: '#336791' },
+  { name: 'Node.js', category: 'Frameworks & Tools', desc: 'JS Runtime', version: '20.10.0', publisher: 'OpenJS', icon: SiNodedotjs, color: '#339933' },
+  { name: 'Python', category: 'Languages', desc: 'Programming Language', version: '3.12.1', publisher: 'Python', icon: SiPython, color: '#3776AB' },
+  { name: 'Git', category: 'Frameworks & Tools', desc: 'Version Control', version: '2.43.0', publisher: 'The Git Project', icon: SiGit, color: '#F05032' },
+  { name: 'Docker', category: 'Frameworks & Tools', desc: 'Containerization', version: '24.0.5', publisher: 'Docker, Inc.', icon: SiDocker, color: '#2496ED' },
+  { name: 'JavaScript', category: 'Languages', desc: 'Programming Language', version: 'ES2024', publisher: 'ECMA International', icon: SiJavascript, color: '#F7DF1E' },
+  { name: 'PyTorch', category: 'Libraries', desc: 'Machine Learning', version: '2.1.0', publisher: 'Meta', icon: SiPytorch, color: '#EE4C2C' },
+  { name: 'NumPy', category: 'Libraries', desc: 'Numerical Computing', version: '1.26.4', publisher: 'NumPy Developers', icon: SiNumpy, color: '#4D77CF' },
+  { name: 'scikit-learn', category: 'Libraries', desc: 'Machine Learning', version: '1.2.2', publisher: 'scikit-learn Developers', icon: SiScikitlearn, color: '#F7931E' },
+  { name: 'R', category: 'Languages', desc: 'Statistical Computing', version: '4.3.1', publisher: 'R Core Team', icon: SiR, color: '#276DC3' },
+  { name: 'TensorFlow', category: 'Libraries', desc: 'Machine Learning', version: '2.13.0', publisher: 'Google', icon: SiTensorflow, color: '#FF6F00' },
+  { name: 'Java', category: 'Languages', desc: 'Programming Language', version: '21', publisher: 'Oracle', icon: RiJavaFill, color: '#007396' },
+  { name: 'C++', category: 'Languages', desc: 'Programming Language', version: 'C++20', publisher: 'ISO', icon: SiCplusplus, color: '#00599C' },
+  { name: 'OpenCV', category: 'Libraries', desc: 'Computer Vision', version: '4.7.0', publisher: 'OpenCV Team', icon: SiOpencv, color: '#5C3EE8' },
+  { name: 'Jupyter', category: 'Frameworks & Tools', desc: 'Interactive Notebooks', version: '1.0.0', publisher: 'Project Jupyter', icon: SiJupyter, color: '#F37626' },
+  { name: 'npm', category: 'Frameworks & Tools', desc: 'Node Package Manager', version: '9.5.0', publisher: 'npm, Inc.', icon: SiNpm, color: '#CB3837' },
 ];
 
-const SidebarExtensions = () => {
+const SidebarExtensions = ({ filterCategory }: { filterCategory: string | null }) => {
+    const filteredExtensions = filterCategory 
+      ? extensions.filter(ext => ext.category === filterCategory)
+      : extensions;
+
     return (
-        <div className="flex flex-col h-full">
-            <div className="px-4 py-2 text-[11px] font-bold text-[#bbbbbb] uppercase">Installed</div>
+        <div className="flex flex-col flex-1 min-h-0">
+            <div className="px-4 py-2 text-[11px] font-bold text-[#bbbbbb] uppercase">
+                {filterCategory ? `Installed - ${filterCategory}` : 'Installed'}
+            </div>
             <div className="flex-1 overflow-y-auto custom-scrollbar">
-                {extensions.map((ext) => (
+                {filteredExtensions.map((ext) => (
                     <div key={ext.name} className="flex p-3 hover:bg-[#2a2d2e] cursor-pointer group">
                         <div className="w-8 h-8 bg-[#3c3c3c] mr-3 flex items-center justify-center flex-shrink-0">
-                           {/* Using a placeholder icon since we don't have real images yet */}
-                           <Puzzle className="w-5 h-5 text-[#007acc]" />
+                           <ext.icon className="w-5 h-5" style={{ color: ext.color || '#cccccc' }} />
                         </div>
                         <div className="flex-1 min-w-0 overflow-hidden">
                             <div className="flex justify-between items-center mb-0.5">
@@ -96,6 +122,14 @@ const FileTreeItem = ({ item, depth = 0 }: { item: FileSystemItem; depth?: numbe
 
 const Sidebar = () => {
   const { fileSystem, explorerVisible, activeSidebarView } = usePortfolio();
+  const [filterCategory, setFilterCategory] = useState<string | null>(null);
+
+  const handleFilterClick = () => {
+    const categories = ['Languages', 'Libraries', 'Frameworks & Tools'];
+    const currentIndex = filterCategory ? categories.indexOf(filterCategory) : -1;
+    const nextIndex = currentIndex + 1;
+    setFilterCategory(nextIndex < categories.length ? categories[nextIndex] : null);
+  };
 
   if (!explorerVisible) return null;
 
@@ -105,8 +139,18 @@ const Sidebar = () => {
         <span>{activeSidebarView === 'extensions' ? 'Extensions' : 'Explorer'}</span>
         {activeSidebarView === 'extensions' && (
            <div className="flex gap-2">
-             <Filter className="w-4 h-4 cursor-pointer hover:text-white" />
-             <RefreshCcw className="w-4 h-4 cursor-pointer hover:text-white" />
+             <div title={filterCategory ? `Filter: ${filterCategory}` : "Filter Extensions"}>
+               <Filter 
+                 className={`w-4 h-4 cursor-pointer hover:text-white ${filterCategory ? 'text-white' : ''}`} 
+                 onClick={handleFilterClick}
+               />
+             </div>
+             <div title="Clear Filter">
+               <RefreshCcw 
+                 className="w-4 h-4 cursor-pointer hover:text-white" 
+                 onClick={() => setFilterCategory(null)}
+               />
+             </div>
              <MoreHorizontal className="w-4 h-4 cursor-pointer hover:text-white" />
            </div>
         )}
@@ -116,7 +160,7 @@ const Sidebar = () => {
       </div>
       
       {activeSidebarView === 'extensions' ? (
-        <SidebarExtensions />
+        <SidebarExtensions filterCategory={filterCategory} />
       ) : (
         <div className="flex-1 overflow-y-auto custom-scrollbar">
           <div className="font-bold text-xs px-4 py-1 flex items-center cursor-pointer text-white">
