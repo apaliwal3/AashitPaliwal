@@ -2,10 +2,10 @@
 
 import React from 'react';
 import { usePortfolio } from '../../context/PortfolioContext';
-import { FileText, Code, Mail, Terminal as TerminalIcon, Github } from 'lucide-react';
+import { FileText, Code, Mail, Terminal as TerminalIcon, Github, Puzzle } from 'lucide-react';
 
 const StartPage = () => {
-  const { openFile, toggleTerminal } = usePortfolio();
+  const { openFile, toggleTerminal, setActiveSidebarView, explorerVisible, toggleExplorer } = usePortfolio();
 
   return (
     <div className="flex flex-col h-full bg-[#1f1f1f] text-[#cccccc] p-10 overflow-auto">
@@ -51,6 +51,20 @@ const StartPage = () => {
                   <span>Contact Me</span>
                 </div>
                 <span className="text-xs text-[#8e8e8e] ml-6 group-hover:text-[#cccccc]">Send a message via JSON form</span>
+              </button>
+
+              <button 
+                onClick={() => {
+                  setActiveSidebarView('extensions');
+                  if (!explorerVisible) toggleExplorer();
+                }}
+                className="group flex flex-col items-start p-2 -ml-2 rounded hover:bg-[#2a2d2e] transition-colors text-left"
+              >
+                <div className="flex items-center text-[#3794ff] group-hover:text-[#4daafc]">
+                  <Puzzle className="w-4 h-4 mr-2" />
+                  <span>See installed extensions</span>
+                </div>
+                <span className="text-xs text-[#8e8e8e] ml-6 group-hover:text-[#cccccc]">Check out the tools and languages I use</span>
               </button>
             </div>
           </div>
