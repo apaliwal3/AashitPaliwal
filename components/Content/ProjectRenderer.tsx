@@ -1,11 +1,26 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
-const projectsData: Record<string, { code: string; previewUrl?: string; imageUrl?: string; description?: string }> = {
+type FeatureSection = {
+  title: string;
+  items: string[];
+};
+
+type ProjectData = {
+  title?: string;
+  code: string;
+  previewUrl?: string;
+  imageUrl?: string;
+  description?: string;
+  overview?: string;
+  techStack?: string[];
+  features?: FeatureSection[];
+};
+
+const projectsData: Record<string, ProjectData> = {
   '/Projects/portfolio.tsx': {
+    title: 'Portfolio',
     code: `
 import React from 'react';
 import { NextPage } from 'next';
@@ -26,10 +41,29 @@ const Portfolio: NextPage = () => {
 export default Portfolio;
     `,
     description: "A VS Code inspired developer portfolio website.",
+    overview: 'A modern portfolio that mimics a VS Code workflow and presents projects in a developer-first interface.',
+    techStack: ['Next.js', 'TypeScript', 'Tailwind CSS'],
+    features: [
+      {
+        title: 'UI and Experience',
+        items: [
+          'VS Code-inspired layout with navigation, editor, and terminal sections.',
+          'Focused project pages with clear code and preview tabs.'
+        ]
+      },
+      {
+        title: 'Project Presentation',
+        items: [
+          'Interactive content rendering for bio, contact, and projects.',
+          'Syntax highlighted snippets for technical clarity.'
+        ]
+      }
+    ],
     previewUrl: "https://your-portfolio.com",
     imageUrl: "/placeholder-project.png"
   },
   '/Projects/ecommerce-api.ts': {
+    title: 'Ecommerce API',
     code: `
 import express, { Request, Response } from 'express';
 import { ProductModel } from './models';
@@ -48,6 +82,89 @@ router.get('/products', async (req: Request, res: Response) => {
 export default router;
     `,
     description: "Backend API for an e-commerce platform.",
+    overview: 'A RESTful backend service that powers core product operations for an ecommerce application.',
+    techStack: ['Node.js', 'Express', 'TypeScript'],
+    features: [
+      {
+        title: 'API Design',
+        items: [
+          'Modular route organization with clear request and response contracts.',
+          'Consistent status code and JSON response handling.'
+        ]
+      },
+      {
+        title: 'Reliability',
+        items: [
+          'Graceful error handling for database and server exceptions.',
+          'Typed handlers for safer request processing.'
+        ]
+      }
+    ]
+  },
+  '/Projects/expense-tracker.tsx': {
+    title: 'ExpenseTracker',
+    code: `
+// Frontend
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import DashboardPage from './pages/DashboardPage';
+import GroupSpendingPage from './pages/GroupSpendingPage';
+
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/dashboard" element={<DashboardPage />} />
+      <Route path="/groups" element={<GroupSpendingPage />} />
+    </Routes>
+  );
+}
+
+// Backend
+import express from 'express';
+import authRoutes from './routes/authRoutes';
+import expenseRoutes from './routes/expenseRoutes';
+
+const app = express();
+app.use('/api/auth', authRoutes);
+app.use('/api/expenses', expenseRoutes);
+    `,
+    description: 'A full-stack personal and shared finance tracker built with React, Node.js, and PostgreSQL.',
+    overview: 'ExpenseTracker helps users control spending with personal and shared expense tracking, debt settlement workflows, financial insights, and secure authentication.',
+    techStack: ['React', 'Node.js', 'PostgreSQL', 'Chart.js', 'JWT', 'bcrypt'],
+    features: [
+      {
+        title: 'Authentication',
+        items: [
+          'Secure email and password login using bcrypt and JWT.',
+          'Session-based user state management with AuthContext in React.',
+          'Protected API routes through middleware validation.'
+        ]
+      },
+      {
+        title: 'My Spending Dashboard',
+        items: [
+          'Personal and shared expenses visualized in one place.',
+          'Top category, money owed, and reimbursable balances shown at a glance.',
+          'Interactive Chart.js trends including monthly, category-wise, and anomaly views.'
+        ]
+      },
+      {
+        title: 'Group Spending',
+        items: [
+          'Split purchases among multiple users.',
+          'Track who owes who and how much in real time.',
+          'Settle-up support with automatic minimum transaction suggestions.'
+        ]
+      },
+      {
+        title: 'Smart Categorization',
+        items: [
+          'NLP-based classifier trained on JSON expense data.',
+          'Automatic category assignment for incoming transactions.',
+          'Iterative model experimentation with Logistic Regression and MultinomialNB.'
+        ]
+      }
+    ]
   }
 };
 
@@ -78,14 +195,41 @@ const ProjectRenderer = ({ path }: { path: string }) => {
 
       <div className="flex-1 overflow-auto">
         {activeTab === 'code' ? (
-          <SyntaxHighlighter
-            language="typescript"
-            style={vscDarkPlus}
-            customStyle={{ margin: 0, padding: '20px', height: '100%', background: '#1e1e1e' }}
-            showLineNumbers={true}
-          >
-            {project.code.trim()}
-          </SyntaxHighlighter>
+          <div className="h-full overflow-auto bg-[#1f1f1f] px-6 py-5">
+              <h2 className="text-xl font-semibold text-white mb-2">{project.title || 'Project'} Overview</h2>
+              {project.overview && <p className="text-sm text-gray-300 leading-6">{project.overview}</p>}
+
+              {project.techStack && project.techStack.length > 0 && (
+                <div className="mt-4">
+                  <h3 className="text-xs uppercase tracking-wide text-gray-400 mb-2">Tech Stack</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {project.techStack.map((tech) => (
+                      <span
+                        key={tech}
+                        className="text-xs px-2 py-1 rounded border border-[#3e3e42] bg-[#252526] text-gray-200"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {project.features && project.features.length > 0 && (
+                <div className="mt-5 grid gap-4 md:grid-cols-2">
+                  {project.features.map((section) => (
+                    <div key={section.title} className="rounded border border-[#3e3e42] bg-[#252526] p-4">
+                      <h3 className="text-sm font-semibold text-white mb-2">{section.title}</h3>
+                      <ul className="list-disc pl-4 text-sm text-gray-300 space-y-1">
+                        {section.items.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              )}
+          </div>
         ) : (
           <div className="p-8 text-vscode-text">
             <h2 className="text-2xl font-bold mb-4 text-white">Project Preview</h2>
