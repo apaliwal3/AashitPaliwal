@@ -62,17 +62,17 @@ const initialFileSystem: FileSystemItem[] = [
         content: 'project'
       },
       {
-        name: 'ecommerce-api.ts',
-        type: 'file',
-        path: '/Projects/ecommerce-api.ts',
-        language: 'typescript',
-        content: 'project'
-      },
-      {
         name: 'expense-tracker.tsx',
         type: 'file',
         path: '/Projects/expense-tracker.tsx',
         language: 'typescript',
+        content: 'project'
+      },
+      {
+        name: 'Premier-league-predictor.ipynb',
+        type: 'file',
+        path: '/Projects/premier-league-predictor.ipynb',
+        language: 'python',
         content: 'project'
       }
     ]

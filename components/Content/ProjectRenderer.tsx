@@ -62,45 +62,6 @@ export default Portfolio;
     previewUrl: "https://your-portfolio.com",
     imageUrl: "/placeholder-project.png"
   },
-  '/Projects/ecommerce-api.ts': {
-    title: 'Ecommerce API',
-    code: `
-import express, { Request, Response } from 'express';
-import { ProductModel } from './models';
-
-const router = express.Router();
-
-router.get('/products', async (req: Request, res: Response) => {
-  try {
-    const products = await ProductModel.find({});
-    res.status(200).json(products);
-  } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-export default router;
-    `,
-    description: "Backend API for an e-commerce platform.",
-    overview: 'A RESTful backend service that powers core product operations for an ecommerce application.',
-    techStack: ['Node.js', 'Express', 'TypeScript'],
-    features: [
-      {
-        title: 'API Design',
-        items: [
-          'Modular route organization with clear request and response contracts.',
-          'Consistent status code and JSON response handling.'
-        ]
-      },
-      {
-        title: 'Reliability',
-        items: [
-          'Graceful error handling for database and server exceptions.',
-          'Typed handlers for safer request processing.'
-        ]
-      }
-    ]
-  },
   '/Projects/expense-tracker.tsx': {
     title: 'ExpenseTracker',
     code: `
@@ -162,6 +123,52 @@ app.use('/api/expenses', expenseRoutes);
           'NLP-based classifier trained on JSON expense data.',
           'Automatic category assignment for incoming transactions.',
           'Iterative model experimentation with Logistic Regression and MultinomialNB.'
+        ]
+      }
+    ]
+  },
+  '/Projects/premier-league-predictor.ipynb': {
+    title: 'EPL Match Data Analysis (2000-2025)',
+    code: `
+import kagglehub
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+
+# Download and load EPL data
+path = kagglehub.dataset_download("hugomathien/soccer")
+matches = pd.read_csv(f"{path}/EPL.csv")
+
+# Basic preprocessing and baseline model
+features = ["HomeShots", "AwayShots", "HomeYellow", "AwayYellow"]
+target = "Result"
+
+X_train, X_test, y_train, y_test = train_test_split(
+    matches[features], matches[target], test_size=0.2, random_state=42
+)
+
+model = RandomForestClassifier(random_state=42)
+model.fit(X_train, y_train)
+print("Baseline accuracy:", model.score(X_test, y_test))
+    `,
+    description: 'Data analysis and machine learning on EPL match datasets using pandas, scikit-learn, and kagglehub.',
+    overview: 'Automatically downloads EPL datasets from Kaggle, processes season-level and match-level data, and provides reproducible notebooks for trend analysis and predictive modeling from 2000 to 2025.',
+    techStack: ['Python', 'pandas', 'scikit-learn', 'kagglehub', 'Jupyter', 'Sports Analytics'],
+    features: [
+      {
+        title: 'Data Pipeline',
+        items: [
+          'Automatically fetches EPL datasets from Kaggle using kagglehub.',
+          'Cleans and standardizes match records across multiple seasons.',
+          'Creates reusable notebooks for reproducible analysis workflows.'
+        ]
+      },
+      {
+        title: 'Analytics and Modeling',
+        items: [
+          'Exploratory analysis of match outcomes, goals, and team performance trends.',
+          'Feature engineering for predictive tasks using historical match metrics.',
+          'Machine learning experiments with scikit-learn for outcome prediction.'
         ]
       }
     ]
