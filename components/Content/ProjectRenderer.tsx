@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
+import { Github } from 'lucide-react';
 
 type FeatureSection = {
   title: string;
@@ -9,8 +10,8 @@ type FeatureSection = {
 
 type ProjectData = {
   title?: string;
-  code: string;
   previewUrl?: string;
+  githubUrl?: string;
   imageUrl?: string;
   description?: string;
   overview?: string;
@@ -21,25 +22,6 @@ type ProjectData = {
 const projectsData: Record<string, ProjectData> = {
   '/Projects/portfolio.tsx': {
     title: 'Portfolio',
-    code: `
-import React from 'react';
-import { NextPage } from 'next';
-
-const Portfolio: NextPage = () => {
-  return (
-    <div className="portfolio-container">
-      <h1>Developer Portfolio</h1>
-      <p>Built with Next.js, TypeScript, and Tailwind.</p>
-      
-      <FeatureList 
-        features={['Interactive Terminal', 'VS Code Theme', 'File Navigation']} 
-      />
-    </div>
-  );
-};
-
-export default Portfolio;
-    `,
     description: "A VS Code inspired developer portfolio website.",
     overview: 'A modern portfolio that mimics a VS Code workflow and presents projects in a developer-first interface.',
     techStack: ['Next.js', 'TypeScript', 'Tailwind CSS'],
@@ -60,35 +42,11 @@ export default Portfolio;
       }
     ],
     previewUrl: "https://your-portfolio.com",
+    githubUrl: 'https://github.com/your-username/portfolio',
     imageUrl: "/placeholder-project.png"
   },
   '/Projects/expense-tracker.tsx': {
     title: 'ExpenseTracker',
-    code: `
-// Frontend
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import DashboardPage from './pages/DashboardPage';
-import GroupSpendingPage from './pages/GroupSpendingPage';
-
-export default function App() {
-  return (
-    <Routes>
-      <Route path="/dashboard" element={<DashboardPage />} />
-      <Route path="/groups" element={<GroupSpendingPage />} />
-    </Routes>
-  );
-}
-
-// Backend
-import express from 'express';
-import authRoutes from './routes/authRoutes';
-import expenseRoutes from './routes/expenseRoutes';
-
-const app = express();
-app.use('/api/auth', authRoutes);
-app.use('/api/expenses', expenseRoutes);
-    `,
     description: 'A full-stack personal and shared finance tracker built with React, Node.js, and PostgreSQL.',
     overview: 'ExpenseTracker helps users control spending with personal and shared expense tracking, debt settlement workflows, financial insights, and secure authentication.',
     techStack: ['React', 'Node.js', 'PostgreSQL', 'Chart.js', 'JWT', 'bcrypt'],
@@ -125,32 +83,11 @@ app.use('/api/expenses', expenseRoutes);
           'Iterative model experimentation with Logistic Regression and MultinomialNB.'
         ]
       }
-    ]
+    ],
+    githubUrl: 'https://github.com/your-username/expense-tracker'
   },
   '/Projects/premier-league-predictor.ipynb': {
     title: 'EPL Match Data Analysis (2000-2025)',
-    code: `
-import kagglehub
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-
-# Download and load EPL data
-path = kagglehub.dataset_download("hugomathien/soccer")
-matches = pd.read_csv(f"{path}/EPL.csv")
-
-# Basic preprocessing and baseline model
-features = ["HomeShots", "AwayShots", "HomeYellow", "AwayYellow"]
-target = "Result"
-
-X_train, X_test, y_train, y_test = train_test_split(
-    matches[features], matches[target], test_size=0.2, random_state=42
-)
-
-model = RandomForestClassifier(random_state=42)
-model.fit(X_train, y_train)
-print("Baseline accuracy:", model.score(X_test, y_test))
-    `,
     description: 'Data analysis and machine learning on EPL match datasets using pandas, scikit-learn, and kagglehub.',
     overview: 'Automatically downloads EPL datasets from Kaggle, processes season-level and match-level data, and provides reproducible notebooks for trend analysis and predictive modeling from 2000 to 2025.',
     techStack: ['Python', 'pandas', 'scikit-learn', 'kagglehub', 'Jupyter', 'Sports Analytics'],
@@ -171,7 +108,8 @@ print("Baseline accuracy:", model.score(X_test, y_test))
           'Machine learning experiments with scikit-learn for outcome prediction.'
         ]
       }
-    ]
+    ],
+    githubUrl: 'https://github.com/your-username/epl-match-data-analysis'
   }
 };
 
@@ -205,6 +143,20 @@ const ProjectRenderer = ({ path }: { path: string }) => {
           <div className="h-full overflow-auto bg-[#1f1f1f] px-6 py-5">
               <h2 className="text-xl font-semibold text-white mb-2">{project.title || 'Project'} Overview</h2>
               {project.overview && <p className="text-sm text-gray-300 leading-6">{project.overview}</p>}
+
+              {project.githubUrl && (
+                <div className="mt-3 mb-1">
+                  <a
+                    href={project.githubUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="Open GitHub repository"
+                    className="h-10 w-10 rounded border border-[#3e3e42] bg-[#252526] text-gray-200 hover:text-white hover:border-[#6b6b6b] flex items-center justify-center transition-colors"
+                  >
+                    <Github className="h-5 w-5" />
+                  </a>
+                </div>
+              )}
 
               {project.techStack && project.techStack.length > 0 && (
                 <div className="mt-4">
@@ -246,16 +198,30 @@ const ProjectRenderer = ({ path }: { path: string }) => {
                <span className="opacity-50">Project Screenshot / Demo</span>
             </div>
 
-            {project.previewUrl && (
-              <a 
-                href={project.previewUrl} 
-                target="_blank" 
-                rel="noreferrer"
-                className="bg-[#0e639c] text-white px-4 py-2 hover:bg-[#1177bb] transition-colors inline-block"
-              >
-                Live Demo
-              </a>
-            )}
+            <div className="flex items-center gap-3">
+              {project.previewUrl && (
+                <a
+                  href={project.previewUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="bg-[#0e639c] text-white px-4 py-2 hover:bg-[#1177bb] transition-colors inline-block"
+                >
+                  Live Demo
+                </a>
+              )}
+
+              {project.githubUrl && (
+                <a
+                  href={project.githubUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Open GitHub repository"
+                  className="h-10 w-10 rounded border border-[#3e3e42] bg-[#252526] text-gray-200 hover:text-white hover:border-[#6b6b6b] flex items-center justify-center transition-colors"
+                >
+                  <Github className="h-5 w-5" />
+                </a>
+              )}
+            </div>
           </div>
         )}
       </div>
